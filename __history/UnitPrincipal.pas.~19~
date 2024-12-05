@@ -1,0 +1,151 @@
+unit UnitPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
+  Vcl.ExtCtrls, Vcl.StdCtrls, RESTRequest4D, REST.Types, System.JSON, System.DateUtils;
+
+type
+  TuntPrincipal = class(TForm)
+    DBGrid1: TDBGrid;
+    Button1: TButton;
+    Panel1: TPanel;
+    RadioGroup1: TRadioGroup;
+    Panel2: TPanel;
+    Edit1: TEdit;
+    Label1: TLabel;
+    procedure Button1Click(Sender: TObject);
+    procedure RadioGroup1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  untPrincipal: TuntPrincipal;
+
+implementation
+
+{$R *.dfm}
+
+uses UnitData;
+
+procedure TuntPrincipal.Button1Click(Sender: TObject);
+var
+  LResponse: IResponse;
+  LJsonValue: TJSONValue;
+  LJsonArray: TJSONArray;
+  LJsonObject: TJSONObject;
+  I: Integer;
+  FilterText: string;
+  UpdatedAt: TDateTime;
+begin
+  Try
+    if UnitData.Data.VerificaConexaoAPI then
+    begin
+      // Verifica se o memCovid está ativo
+      if not UnitData.Data.memCovid.Active then
+        UnitData.Data.memCovid.Open
+      else
+      begin
+        // Limpa os dados e mantém a estrutura
+        UnitData.Data.memCovid.EmptyDataSet;
+      end;
+      // Faz a requisição para a API
+      LResponse := TRequest.New.BaseURL('https://covid19-brazil-api.now.sh/api/report/v1/countries')
+        .Accept('application/json')
+        .Get;
+
+      if LResponse.StatusCode = 200 then
+      begin
+        // Analisa o JSON de retorno
+        LJsonValue := TJSONObject.ParseJSONValue(LResponse.Content);
+        try
+          if (LJsonValue <> nil) and (LJsonValue is TJSONObject) then
+          begin
+            LJsonArray := TJSONObject(LJsonValue).GetValue<TJSONArray>('data');
+
+            // Preenche o MemTable com os dados do JSON
+            for I := 0 to LJsonArray.Count - 1 do
+            begin
+              LJsonObject := LJsonArray.Items[I] as TJSONObject;
+              UnitData.Data.memCovid.Append;
+              UnitData.Data.memCovid.FieldByName('COUNTRY').AsString     := LJsonObject.GetValue<string>('country','');
+              UnitData.Data.memCovid.FieldByName('CONFIRMED').AsInteger  := LJsonObject.GetValue<Integer>('confirmed',0);
+              UnitData.Data.memCovid.FieldByName('CASES').AsInteger      := LJsonObject.GetValue<Integer>('cases',0);
+              UnitData.Data.memCovid.FieldByName('DEATHS').AsInteger     := LJsonObject.GetValue<Integer>('deaths',0);
+              UnitData.Data.memCovid.FieldByName('RECOVERED').AsInteger  := LJsonObject.GetValue<Integer>('recovered',0);
+
+              // Tratamento da data
+              if LJsonObject.GetValue<string>('updated_at', '') <> '' then
+              begin
+                // Converte a string da data para o formato TDateTime
+                UpdatedAt := ISO8601ToDate(LJsonObject.GetValue<string>('updated_at', ''));
+                UnitData.Data.memCovid.FieldByName('UPDATED_AT').AsDateTime := UpdatedAt;
+              end;
+
+              UnitData.Data.memCovid.Post;
+            end;
+          end;
+        finally
+          LJsonValue.Free;
+        end;
+      end
+      else
+        ShowMessage('Erro ao acessar API: ' + LResponse.StatusCode.ToString);
+    end
+    else
+      ShowMessage('API indisponível.');
+    // Move o cursor para o primeiro registro após o preenchimento
+    if not UnitData.Data.memCovid.IsEmpty then
+      UnitData.Data.memCovid.First;
+
+    FilterText := Trim(Edit1.Text);
+    if FilterText <> '' then
+    begin
+      // Aplica o filtro para buscar pelo nome do país
+      UnitData.Data.memCovid.Filter := Format('COUNTRY LIKE ''%%%s%%''', [FilterText]);
+      UnitData.Data.memCovid.Filtered := True;
+
+      if UnitData.Data.memCovid.RecordCount = 0 then
+        ShowMessage('Nenhum país encontrado com esse nome.');
+    end
+    else
+      UnitData.Data.memCovid.Filtered := False;
+  Except
+    on E: Exception do
+    begin
+      // Exibe uma mensagem de erro para o usuário
+      ShowMessage('Erro ao acessar API: ' + E.Message);
+      // Registra o erro no log ou na saída de depuração
+      {$IFDEF DEBUG}
+      OutputDebugString(PChar('Erro em Button1Click: ' + E.Message));
+      {$ENDIF}
+    end;
+  End;
+end;
+
+procedure TuntPrincipal.RadioGroup1Click(Sender: TObject);
+begin
+  if not UnitData.Data.memCovid.Active then
+    Exit;
+
+  case RadioGroup1.ItemIndex of
+    0: // Casos Confirmados
+      UnitData.Data.memCovid.IndexFieldNames := 'CONFIRMED';
+    1: // Mortes
+      UnitData.Data.memCovid.IndexFieldNames := 'DEATHS';
+    2: // Recuperados
+      UnitData.Data.memCovid.IndexFieldNames := 'RECOVERED';
+  else
+    UnitData.Data.memCovid.IndexFieldNames := ''; // Sem ordenação
+  end;
+  // Move o cursor para o primeiro registro após o preenchimento
+  if not UnitData.Data.memCovid.IsEmpty then
+    UnitData.Data.memCovid.First;
+end;
+
+end.

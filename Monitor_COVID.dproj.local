@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2024/12/03 17:31:19.000.780,=C:\Users\Jrvoros\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2024/12/03 17:33:59.000.957,=C:\Users\Jrvoros\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/12/03 19:14:27.000.644,C:\Users\Jrvoros\Desktop\COVID - EDATA\UnitPrincipal.pas=C:\Users\Jrvoros\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2024/12/03 19:14:27.000.644,C:\Users\Jrvoros\Desktop\COVID - EDATA\UnitPrincipal.dfm=C:\Users\Jrvoros\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2024/12/03 19:14:56.000.393,C:\Users\Jrvoros\Desktop\COVID - EDATA\UnitData.pas=C:\Users\Jrvoros\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/12/03 19:14:56.000.393,C:\Users\Jrvoros\Desktop\COVID - EDATA\UnitData.dfm=C:\Users\Jrvoros\Documents\Embarcadero\Studio\Projects\Unit2.dfm</Transaction>
+    <Transaction>2024/12/03 19:15:01.000.317,C:\Users\Jrvoros\Desktop\COVID - EDATA\Project1.dproj=C:\Users\Jrvoros\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2024/12/05 10:21:40.314,C:\Users\Jrvoros\Desktop\COVID - EDATA\Monitor_COVID.dproj=C:\Users\Jrvoros\Desktop\COVID - EDATA\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

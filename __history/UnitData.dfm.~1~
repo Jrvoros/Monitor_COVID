@@ -1,0 +1,82 @@
+object Data: TData
+  Height = 193
+  Width = 361
+  object memCovid: TFDMemTable
+    CachedUpdates = True
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 144
+    Top = 72
+    object memCovidCOUNTRY: TStringField
+      DisplayLabel = 'PA'#205'S'
+      FieldName = 'COUNTRY'
+      Size = 40
+    end
+    object memCovidCONFIRMED: TIntegerField
+      DisplayLabel = 'CONFIRMADOS'
+      FieldName = 'CONFIRMED'
+    end
+    object memCovidCASES: TIntegerField
+      DisplayLabel = 'CASOS'
+      FieldName = 'CASES'
+    end
+    object memCovidDEATHS: TIntegerField
+      DisplayLabel = 'MORTES'
+      FieldName = 'DEATHS'
+    end
+    object memCovidRECOVERED: TIntegerField
+      DisplayLabel = 'RECUPERADOS'
+      FieldName = 'RECOVERED'
+    end
+    object memCovidUPDATED_AT: TStringField
+      DisplayLabel = 'ATUALIZADO EM'
+      FieldName = 'UPDATED_AT'
+      Size = 50
+    end
+    object memCovidUID: TIntegerField
+      DisplayLabel = 'ID'
+      FieldName = 'UID'
+    end
+    object memCovidUF: TStringField
+      FieldName = 'UF'
+      Size = 30
+    end
+    object memCovidSTATE: TStringField
+      DisplayLabel = 'ESTADO'
+      FieldName = 'STATE'
+      Size = 5
+    end
+    object memCovidSUSPECTS: TIntegerField
+      DisplayLabel = 'SUSPEITOS'
+      FieldName = 'SUSPECTS'
+    end
+    object memCovidREFUSES: TIntegerField
+      DisplayLabel = 'RECUSA'
+      FieldName = 'REFUSES'
+    end
+    object memCovidBROADCAST: TBooleanField
+      DisplayLabel = 'TRANSMISS'#195'O'
+      FieldName = 'BROADCAST'
+    end
+    object memCovidCOMMENTS: TStringField
+      DisplayLabel = 'COMENT'#193'RIOS'
+      FieldName = 'COMMENTS'
+      Size = 100
+    end
+    object memCovidDATETIME: TStringField
+      DisplayLabel = 'DATA/HORA'
+      FieldName = 'DATETIME'
+      Size = 50
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = memCovid
+    Left = 216
+    Top = 72
+  end
+end

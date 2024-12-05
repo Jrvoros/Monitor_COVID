@@ -1,0 +1,56 @@
+unit UnitData;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  RESTRequest4D, REST.Types, System.JSON;
+
+type
+  TData = class(TDataModule)
+    memCovid: TFDMemTable;
+    memCovidCOUNTRY: TStringField;
+    memCovidCONFIRMED: TIntegerField;
+    memCovidCASES: TIntegerField;
+    memCovidDEATHS: TIntegerField;
+    memCovidRECOVERED: TIntegerField;
+    memCovidUPDATED_AT: TStringField;
+    DataSource1: TDataSource;
+    function VerificaConexaoAPI : Boolean;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Data: TData;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+uses UnitPrincipal;
+
+{$R *.dfm}
+
+
+
+{ TData }
+
+function TData.VerificaConexaoAPI: Boolean;
+var
+  LResponse: IResponse;
+begin
+  Result := False;
+  LResponse := TRequest.New.BaseURL('https://covid19-brazil-api.now.sh/api/report/v1/countries')
+    .Accept('application/json')
+    .Get;
+
+  if LResponse.StatusCode = 200 then
+  begin
+end;
+
+end.
