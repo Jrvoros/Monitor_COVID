@@ -39,7 +39,7 @@ Este projeto foi desenvolvido como parte de uma avaliação técnica para demons
 
 ## Dependências
 - **Delphi RAD Studio**: Ferramenta de desenvolvimento.
-- **RESTRequest4Delphi**: Biblioteca para integração com APIs REST.
+- **RESTRequest4Delphi**: Biblioteca para integração com APIs REST - [RESTRequest4Delphi](https://github.com/viniciussanchez/RESTRequest4Delphi/).
 - **FireDAC**: Para manipulação de dados em memória (TFDMemTable).
 
 ## Observação
